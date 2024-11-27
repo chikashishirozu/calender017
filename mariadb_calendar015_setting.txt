@@ -1,0 +1,27 @@
+CREATE USER 'calendar_user'@'localhost' IDENTIFIED BY 's~eyNgOpsQQ0(+';
+GRANT ALL PRIVILEGES ON calendar017.* TO 'calendar_user'@'localhost';
+CREATE DATABASE calendar017;
+USE calendar017;
+CREATE TABLE IF NOT EXISTS users (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    username VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+
+CREATE TABLE IF NOT EXISTS Memos (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    date TEXT NOT NULL,
+    memo TEXT NOT NULL,
+    reminder TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+ALTER TABLE users CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+INSERT INTO users (id, email, usermame, password, created_at)
+VALUES
+(1, 'zusann123@gmail.com', 'hiroppy123', 'ZELH3kE/L.dW*Y', '2016-10-16 01:00:00'),
+(2, 'tom846@gmail.com', 'tom846', '5FMbNh%RBse}=0', '2016-10-16 02:00:00'),
+(3, 'alice367@gmail.com', 'alice367', 'em3nohwQlg.r`H', '2016-10-16 03:00:00');

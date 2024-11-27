@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <Link rel="shortcut icon" href="./favicon.png" />    
+    <title>ユーザー登録</title>
+    <style>
+        body { 
+          font-family: Arial, sans-serif;
+          background-color: #f0f0f0;
+        }
+        form { max-width: 300px; margin: auto; }
+        label, input { display: block; width: 100%; margin-bottom: 10px; padding: 5px; }
+        button { width: 100%; background-color: #4CAF50; color: white; padding: 10px; border: none; cursor: pointer; }
+        button:hover { background-color: #45a049; }
+        input:focus { outline-color: #4CAF50; }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.php">トップページ</a></li>
+                <!-- li><a href="login.html">ログイン</a></li>
+                <li><a href="register.html">登録</a></li>
+                <li><a href="calendar.html">カレンダー</a></li>
+                <li><a href="tag_management.html">タグマネージメント</a></li -->
+            </ul>
+        </nav>
+    </header>
+    <h1>ユーザー登録</h1>
+    <form action="register.php" method="POST" onsubmit="return validateForm()">
+        <label for="email">メールアドレス</label>
+        <input type="text" id="email" name="email" required>     
+        <label for="username">ユーザー名</label>
+        <input type="text" id="username" name="username" required>      
+        <label for="password">パスワード</label>
+        <input type="password" id="password" name="password" required>
+        <input type="checkbox" onclick="togglePasswordVisibility()"> パスワードを表示
+        <button type="submit">登録</button>
+    </form>
+    <h2>ユーザー情報を忘れた場合</h2> 
+    <form action="remind_user.php" method="POST"> 
+        <label for="remindEmail">登録時のメールアドレス</label> 
+        <input type="email" id="remindEmail" name="email" required> 
+        <button type="submit">ユーザー情報をリマインド</button> 
+    </form> 
+    <h2>パスワードを変更する</h2> 
+    <form action="reset_password.php" method="POST"> 
+        <label for="resetEmail">登録時のメールアドレス</label> 
+        <input type="email" id="resetEmail" name="email" required> 
+        <label for="newPassword">新しいパスワード</label> 
+        <input type="password" id="newPassword" name="password" required> 
+        <button type="submit">パスワードをリセット </button> 
+    </form> 
+    <script>
+        function validateForm() {
+            var email = document.getElementById('email').value;        
+            var username = document.getElementById('username').value;            
+            var password = document.getElementById('password').value;
+
+            if (email.length < 5) {
+                alert('メールアドレスを入力してください。');
+                return false;
+            }
+            if (username.length < 5) {
+                alert('ユーザー名は5文字以上である必要があります。');
+                return false;
+            }           
+            if (password.length < 8) {
+                alert('パスワードは8文字以上である必要があります。');
+                return false;
+            }
+            return true;
+        }
+        function togglePasswordVisibility() {
+            var passwordField = document.getElementById('password');
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+            } else {
+                passwordField.type = "password";
+            }
+        }
+    </script>
+</body>
+</html>
+
