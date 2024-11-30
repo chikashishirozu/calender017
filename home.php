@@ -96,6 +96,17 @@ if (!isset($_SESSION['user_id'])) {
 
 	.saturday {
 	    color: blue;
+	}
+	#current-time {
+	    font-size: 24px;
+	    font-weight: bold;
+	    margin: 0 0 20px 0;
+	    color: #333;
+	    background-color: #eef;
+	    padding: 10px;
+	    border-radius: 5px;
+	    display: inline-block;
+	    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 	}	
     </style>
 </head>
@@ -114,7 +125,7 @@ if (!isset($_SESSION['user_id'])) {
             </ul>
         </nav>
     </header>
-    <h1>メモ付きカレンダー</h1>
+    <h1>メモ付きカレンダー</h1><div id="current-time"></div>
     <div>
         <button id="prevMonth">前の月</button>
         <span id="currentMonthYear"></span>
@@ -148,6 +159,7 @@ if (!isset($_SESSION['user_id'])) {
     <div id="result"></div>
     <div id="errorMessage" class="error"></div>
     <!-- script src="delete_record.js"></script -->
+    <script src="current-time018.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
