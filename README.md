@@ -1,3 +1,3 @@
 # calender017
 
-https://ameblo.jp/hiroppy-yz7oz4mytn6wabf/entry-12878328855.html
+https://zusann123.blogspot.com/2024/12/blog-post_12.html
