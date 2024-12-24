@@ -232,6 +232,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 memoList.innerHTML = '';
                 reminderList.innerHTML = '';
 
+                 // Sort data by date (ascending order)
+                data.memos.sort((a, b) => new Date(a.date) - new Date(b.date));               
+
                 // Display the updated memo and reminder lists
                 data.memos.forEach(item => {
                     // ID List
