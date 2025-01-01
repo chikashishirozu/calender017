@@ -8,6 +8,8 @@ Install php8.3, mysql or mariadb, sqlite3
 
 Set up Mysql or Mariadb
 
+setting php.ini
+
 Set up user information with a script
 
 $ php myuser01.php
