@@ -38,7 +38,7 @@ To check the IP address used by the server, use the following command:
 
 $ ip a
 
-Security:
+# Security:
 
 When using in a public environment, consider that the built-in server is for development, not production.
 
