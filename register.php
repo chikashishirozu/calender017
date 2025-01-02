@@ -1,40 +1,55 @@
 <?php
-// db.php をインポート
 require 'mysql_db.php';
 
-session_start();
+// $mysql_db インスタンスの確認 
+if (!isset($mysql_db) || !isset($mysql_db->pdo)) { 
+    echo json_encode(['status' => 'error', 'message' => 'データベース接続インスタンスが未定義です。']); 
+    exit(); 
+}
 
-$email = $_POST['email'];
-$username = $_POST['username'];
-$password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+header('Content-Type: application/json; charset=utf-8');
+// Start the session if it hasn't been started already
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
 
-// ユーザー名またはメールアドレスが既に存在するか確認
-$stmt = $db->pdo->prepare('SELECT * FROM users WHERE username = ? OR email = ?');
-$stmt->bindValue(1, $username, PDO::PARAM_STR);
-$stmt->bindValue(2, $email, PDO::PARAM_STR);
-$stmt->execute();
-$user = $stmt->fetch();
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $email = trim($_POST['email'] ?? '');
+    $username = trim($_POST['username'] ?? '');
+    $password = $_POST['password'] ?? '';
 
-if ($user) {
-    // ユーザー名またはメールアドレスが既に存在する場合
-    echo "このユーザー名またはメールアドレスは既に使用されています。別のユーザー名またはメールアドレスを選んでください。";
-} else {
-    // ユーザー名またはメールアドレスが存在しない場合のみ登録を実行
-    $stmt = $db->pdo->prepare('INSERT INTO users (email, username, password) VALUES (?, ?, ?)');
-    $stmt->bindValue(1, $email, PDO::PARAM_STR);
-    $stmt->bindValue(2, $username, PDO::PARAM_STR);
-    $stmt->bindValue(3, $password, PDO::PARAM_STR);
-
-    $result = $stmt->execute();
-
-    if ($result) {
-        // 登録が成功した場合、ログインページにリダイレクト
-        header("Location: login.html");
+    if (!$email || !$username || !$password) {
+        echo json_encode(['status' => 'error', 'message' => 'すべてのフィールドを入力してください。']);
         exit();
-    } else {
-        echo "ユーザー登録に失敗しました: " . $stmt->errorInfo()[2];
+    }
+
+    try {
+        $stmt = $mysql_db->pdo->prepare('SELECT * FROM users WHERE username = ? OR email = ?');
+        $stmt->execute([$username, $email]);
+        $user = $stmt->fetch();
+
+        if ($user) {
+            echo json_encode(['status' => 'error', 'message' => 'このユーザー名またはメールアドレスは既に使用されています。']);
+            exit();
+        }
+
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+        $stmt = $mysql_db->pdo->prepare('INSERT INTO users (email, username, password) VALUES (?, ?, ?)');
+        if ($stmt->execute([$email, $username, $hashedPassword])) {
+            $_SESSION['user_id'] = $mysql_db->pdo->lastInsertId();
+            $_SESSION['username'] = $username;
+            echo json_encode(['status' => 'success', 'message' => '登録が完了しました。ログインページへ移動してください。']);
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'ユーザー登録に失敗しました。']);
+        }
+    } catch (PDOException $e) {
+        echo json_encode(['status' => 'error', 'message' => 'システムエラー: ' . $e->getMessage()]);
+    } catch (Exception $e) {
+        echo json_encode(['status' => 'error', 'message' => 'システムエラー: ' . $e->getMessage()]);
     }
 }
 ?>
+
+
 
 

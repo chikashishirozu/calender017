@@ -1,5 +1,5 @@
 <?php
-// db.php
+// mysql_db.php
 
 class MySQLDatabase {
     private $host = 'localhost';
@@ -17,8 +17,10 @@ class MySQLDatabase {
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
                 PDO::ATTR_EMULATE_PREPARES => false,
             ]);
+            // テーブル作成メソッドを呼び出し
+            $this->createTables();
         } catch (PDOException $e) {
-            echo '接続失敗: ' . $e->getMessage();
+            echo json_encode(['status' => 'error', 'message' => 'データベース接続に失敗しました: ' . $e->getMessage()]);
             exit();
         }
     }
@@ -46,8 +48,10 @@ class MySQLDatabase {
     }
 }
 
+// インスタンス作成
 $mysql_db = new MySQLDatabase();
 ?>
+
 
 
 

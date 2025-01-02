@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <Link rel="shortcut icon" href="./favicon.png" />    
+    <link rel="shortcut icon" href="./favicon.png" />    
     <title>ユーザー登録</title>
     <style>
         body { 
@@ -15,7 +15,7 @@
         button { width: 100%; background-color: #4CAF50; color: white; padding: 10px; border: none; cursor: pointer; }
         button:hover { background-color: #45a049; }
         input:focus { outline-color: #4CAF50; }
-    </style>
+    </style>    
 </head>
 <body>
     <header>
@@ -27,10 +27,10 @@
                 <li><a href="calendar.html">カレンダー</a></li>
                 <li><a href="tag_management.html">タグマネージメント</a></li -->
             </ul>
-        </nav>
+        </nav>   
     </header>
     <h1>ユーザー登録</h1>
-    <form action="register.php" method="POST" onsubmit="return validateForm()">
+    <form id="registerForm" action="register.php" method="POST">
         <label for="email">メールアドレス</label>
         <input type="text" id="email" name="email" required>     
         <label for="username">ユーザー名</label>
@@ -41,30 +41,31 @@
         <button type="submit">登録</button>
     </form>
     <h2>ユーザー情報を忘れた場合</h2> 
-    <form action="remind_user.php" method="POST"> 
+    <form id="remindForm" action="remind_user.php" method="POST"> 
         <label for="remindEmail">登録時のメールアドレス</label> 
         <input type="email" id="remindEmail" name="email" required> 
         <button type="submit">ユーザー情報をリマインド</button> 
     </form> 
     <h2>パスワードを変更する</h2> 
-    <form action="reset_password.php" method="POST"> 
+    <form id="resetForm" action="reset_password.php" method="POST"> 
         <label for="resetEmail">登録時のメールアドレス</label> 
         <input type="email" id="resetEmail" name="email" required> 
         <label for="newPassword">新しいパスワード</label> 
         <input type="password" id="newPassword" name="password" required> 
-        <button type="submit">パスワードをリセット </button> 
-    </form> 
+        <button type="submit">パスワードをリセット</button> 
+    </form>
     <script>
-        function validateForm() {
-            var email = document.getElementById('email').value;        
-            var username = document.getElementById('username').value;            
-            var password = document.getElementById('password').value;
+        // フォームバリデーション
+        function validateForm(form) {
+            const email = form.querySelector('input[name="email"]').value;        
+            const username = form.querySelector('input[name="username"]')?.value || '';            
+            const password = form.querySelector('input[name="password"]').value;
 
             if (email.length < 5) {
                 alert('メールアドレスを入力してください。');
                 return false;
             }
-            if (username.length < 5) {
+            if (username && username.length < 5) {
                 alert('ユーザー名は5文字以上である必要があります。');
                 return false;
             }           
@@ -74,15 +75,50 @@
             }
             return true;
         }
+
+        // パスワードの可視化切替
         function togglePasswordVisibility() {
-            var passwordField = document.getElementById('password');
-            if (passwordField.type === "password") {
-                passwordField.type = "text";
-            } else {
-                passwordField.type = "password";
+            const passwordField = document.getElementById('password');
+            if (passwordField) {
+                passwordField.type = passwordField.type === "password" ? "text" : "password";
             }
         }
-    </script>
+
+        // フォーム送信処理
+        async function handleFormSubmission(event) {
+            event.preventDefault();
+
+            const form = event.target;
+            const action = form.getAttribute('action');
+
+            if (!validateForm(form)) {
+                return; // バリデーション失敗時はリクエストを送らない
+            }
+
+            const formData = new FormData(form);
+            try {
+                const response = await fetch(action, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+                alert(result.message);
+
+                if (result.status === 'success' && action.includes('register.php')) {
+                    window.location.href = 'login.html';
+                }
+            } catch (error) {
+                alert('エラーが発生しました: ' + error.message);
+            }
+        }
+
+        // 動的にイベントリスナーを設定
+        document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', handleFormSubmission);
+        });
+    </script>      
 </body>
 </html>
+
 
