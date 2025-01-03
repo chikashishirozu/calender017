@@ -43,3 +43,17 @@ $ ip a
 When using in a public environment, consider that the built-in server is for development, not production.
 
 $ php -S localhost:1505
+
+# Settings for Linux and Apache2
+
+$ sudo apt install apache2 libapache2-mod-php php-mysql mysql-server php-gd php-sqlite3 php-fpm
+
+setting php.ini httpd.conf mysql
+
+$ sudo chown -R apache:apache /var/www/html/calender017
+
+$ sudo find /var/www/html/calender017 -type d -exec chmod 755 {} \;
+
+$ sudo find /var/www/html/calender017 -type f -exec chmod 644 {} \;
+
+$ sudo chcon -R -t httpd_sys_content_t /var/www/html/calender017
