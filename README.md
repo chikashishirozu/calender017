@@ -50,10 +50,22 @@ $ sudo apt install apache2 libapache2-mod-php php-mysql mysql-server php-gd php-
 
 setting php.ini httpd.conf mysql
 
+$ sudo cp -r calender017 /var/www/html
+
 $ sudo chown -R apache:apache /var/www/html/calender017
+
+$ sudo chown apache:apache /var/www/html/calender017/calendar.db
 
 $ sudo find /var/www/html/calender017 -type d -exec chmod 755 {} \;
 
 $ sudo find /var/www/html/calender017 -type f -exec chmod 644 {} \;
 
-$ sudo chcon -R -t httpd_sys_content_t /var/www/html/calender017
+$ sudo chcon -R -t httpd_sys_rw_content_t /var/www/html/calender017
+
+$ sudo chcon -R -t httpd_sys_rw_content_t /var/www/html/calender017/calendar.db
+
+$ sudo chmod 775 /var/www/html/calender017
+
+$ sudo chmod 664 /var/www/html/calender017/calendar.db
+
+$ sudo systemctl restart httpd
