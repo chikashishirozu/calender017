@@ -46,15 +46,27 @@ $ php -S localhost:1505
 
 # Settings for Linux and Apache2
 
-$ sudo apt install apache2 libapache2-mod-php php-mysql mysql-server php-gd php-sqlite3 php-fpm
+(For reference, see How to build a PHP8+Apache+MySQL+phpMyAdmin development environment on Windows without XAMPP
+https://qiita.com/Limitex/items/098d2be431f1f031b1b9
+.)
 
-setting php.ini httpd.conf mysql
+$ sudo dnf install php php-fpm php-gd php-xml php-sqlite3 php-json php-mysqlnd mysql-server httpd php-mbstring php-intl php-pdo php-curl php-zip php-xmlwriter php-opcache php-mysqli php-pecl-xdebug (fedora)
+
+--- Depending on the environment (Debian) 
+
+$ sudo apt install apache2 libapache2-mod-php php-mysql mysql-server php-gd php-sqlite3 php-fpm php-mbstring php-intl php-pdo php-curl php-zip php-xmlwriter php-opcache php-mysqli php-xdebug ---
 
 $ sudo cp -r calender017 /var/www/html
 
 $ sudo chown -R apache:apache /var/www/html/calender017
 
 $ sudo chown apache:apache /var/www/html/calender017/calendar.db
+
+--- Depending on the environment (Debian)
+
+$ sudo chown -R www-data:www-data /var/www/html/calender017
+
+$ sudo chown www-data:www-data /var/www/html/calender017/calendar.db ---
 
 $ sudo find /var/www/html/calender017 -type d -exec chmod 755 {} \;
 
@@ -68,4 +80,26 @@ $ sudo chmod 775 /var/www/html/calender017
 
 $ sudo chmod 664 /var/www/html/calender017/calendar.db
 
+$ sudo systemctl enable httpd
+
+$ sudo systemctl start httpd
+
+--- Depending on the environment (Debian)
+
+$ sudo systemctl enable apache2
+
+$ sudo systemctl start apache2 ---
+
+$ sudo systemctl enable mysql
+ 
+$ sudo systemctl start mysql
+
+$ sudo systemctl enable php-fpm
+
+$ sudo systemctl start php-fpm
+
 $ sudo systemctl restart httpd
+
+--- Depending on the environment (Debian)
+
+$ sudo systemctl restart apache2 ---
