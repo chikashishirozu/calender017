@@ -8,7 +8,7 @@ Install php8.3, mysql or mariadb, sqlite3
 
 Set up Mysql or Mariadb
 
-setting php.ini
+setting php.ini (timezone language extension)
 
 # Set up user information with a script
 
