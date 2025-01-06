@@ -72,9 +72,11 @@ $ sudo find /var/www/html/calender017 -type d -exec chmod 755 {} \;
 
 $ sudo find /var/www/html/calender017 -type f -exec chmod 644 {} \;
 
+--- SELinux settings (fedora)
+
 $ sudo chcon -R -t httpd_sys_rw_content_t /var/www/html/calender017
 
-$ sudo chcon -R -t httpd_sys_rw_content_t /var/www/html/calender017/calendar.db
+$ sudo chcon -R -t httpd_sys_rw_content_t /var/www/html/calender017/calendar.db ---
 
 $ sudo chmod 775 /var/www/html/calender017
 
