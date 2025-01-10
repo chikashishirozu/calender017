@@ -112,7 +112,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     alert('データを保存しました');
                     modal.style.display = 'none';
                     displaySavedData();  // Call the function to update displayed data
-                    window.location.reload();  // ページをリロード
+                    //window.location.reload();  // ページをリロード
                 } else {
                     throw new Error(data.error || 'データの保存に失敗しました。');
                 }
@@ -226,14 +226,14 @@ document.addEventListener("DOMContentLoaded", () => {
     function displaySavedData() {
         fetch('api.php?getAll=true')
             .then(response => response.json())
-            .then(data => {
+            .then(data => {          
                 // Clear the current lists
                 idList.innerHTML = '';
                 memoList.innerHTML = '';
                 reminderList.innerHTML = '';
-
-                 // Sort data by date (ascending order)
-                data.memos.sort((a, b) => new Date(a.date) - new Date(b.date));               
+                
+                // Sort data by date (ascending order)
+                data.memos.sort((a, b) => new Date(a.date) - new Date(b.date));                
 
                 // Display the updated memo and reminder lists
                 data.memos.forEach(item => {
