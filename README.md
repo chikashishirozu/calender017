@@ -68,9 +68,9 @@ $ sudo chown -R www-data:www-data /var/www/html/calender017
 
 $ sudo chown www-data:www-data /var/www/html/calender017/calendar.db ---
 
-$ sudo find /var/www/html/calender017 -type d -exec chmod 755 {} \;
+$ sudo find /var/www/html/calender017 -type d -exec chmod 755 {} \\;
 
-$ sudo find /var/www/html/calender017 -type f -exec chmod 644 {} \;
+$ sudo find /var/www/html/calender017 -type f -exec chmod 644 {} \\;
 
 --- SELinux settings (fedora)
 
