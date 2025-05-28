@@ -10,6 +10,12 @@ Set up Mysql or Mariadb
 
 setting php.ini (timezone language extension)
 
+# Windows11 setting
+
+I was able to safely develop in a local environment on Windows 11 by building a PHP8+Apache+MySQL+phpMyAdmin development environment without XAMPP, following the instructions at https://qiita.com/Limitex/items/098d2be431f1f031b1b9.
+
+Hint: I copied and pasted libcual.dll from Apache2/bin into php, and libsqlite3 from php into Apache2/bin, and it started working.
+
 # Set up user information with a script
 
 $ php myuser01.php
