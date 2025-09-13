@@ -19,6 +19,15 @@ document.addEventListener("DOMContentLoaded", () => {
     let currentYear = new Date().getFullYear();
     let currentMonth = new Date().getMonth();
 
+    // **改善点: 選択状態をリセットする関数を追加**
+    function clearSelectedDate() {
+        if (selectedDate) {
+            selectedDate.classList.remove('selected');
+            selectedDate = null;
+        }
+        selectedDateKey = null;
+    }
+
     // Function to generate the calendar
     function generateCalendar(year, month) {
         calendarElement.innerHTML = '';
@@ -26,6 +35,9 @@ document.addEventListener("DOMContentLoaded", () => {
         const daysInMonth = new Date(year, month + 1, 0).getDate();
 
         currentMonthYearElement.textContent = `${year}年 ${month + 1}月`;
+
+        // **改善点: カレンダー再生成時に選択状態をリセット**
+        clearSelectedDate();
 
         const weekDays = ['日', '月', '火', '水', '木', '金', '土'];
         weekDays.forEach((day, index) => {
@@ -59,7 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
             dayElement.classList.add('day');
             dayElement.textContent = day;
             
-            // **改善点: 日付セルに曜日の色を適用**
+            // 日付セルに曜日の色を適用
             const dayOfWeek = new Date(year, month, day).getDay();
             if (dayOfWeek === 0) { // 日曜日
                 dayElement.classList.add('sunday');
@@ -67,7 +79,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 dayElement.classList.add('saturday');
             }
             
-            // **改善点: 今日の日付をハイライト**
+            // 今日の日付をハイライト
             const today = new Date();
             if (year === today.getFullYear() && month === today.getMonth() && day === today.getDate()) {
                 dayElement.classList.add('today');
@@ -103,6 +115,12 @@ document.addEventListener("DOMContentLoaded", () => {
             });
     }
 
+    // **改善点: モーダル閉じる時に選択状態をリセット**
+    function closeModal() {
+        modal.style.display = 'none';
+        clearSelectedDate(); // 選択状態をクリア
+    }
+
     // Save reminder and memo when button is clicked
     saveModalReminderButton.addEventListener('click', () => {
         if (selectedDateKey) {
@@ -127,9 +145,8 @@ document.addEventListener("DOMContentLoaded", () => {
             .then(data => {
                 if (data.success) {
                     alert('データを保存しました');
-                    modal.style.display = 'none';
-                    displaySavedData();  // Call the function to update displayed data
-                    //window.location.reload();  // ページをリロード
+                    closeModal(); // **改善点: 専用関数を使用**
+                    displaySavedData();
                 } else {
                     throw new Error(data.error || 'データの保存に失敗しました。');
                 }
@@ -140,7 +157,6 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         }
     });
- 
  
     // Edit reminder and memo when button is clicked
     editModalReminderButton.addEventListener('click', () => {
@@ -166,8 +182,8 @@ document.addEventListener("DOMContentLoaded", () => {
             .then(data => {
                 if (data.success) {
                     alert('データを更新しました');
-                    modal.style.display = 'none';
-                    displaySavedData();  // Call the function to update displayed data
+                    closeModal(); // **改善点: 専用関数を使用**
+                    displaySavedData();
                 } else {
                     throw new Error(data.error || 'データの更新に失敗しました。');
                 }
@@ -179,7 +195,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    
     // Delete reminder and memo when button is clicked
     deleteModalReminderButton.addEventListener('click', () => {
         if (selectedDateKey) {
@@ -202,8 +217,8 @@ document.addEventListener("DOMContentLoaded", () => {
             .then(data => {
                 if (data.success) {
                     alert('データを削除しました');
-                    modal.style.display = 'none';
-                    displaySavedData();  // Call the function to update displayed data
+                    closeModal(); // **改善点: 専用関数を使用**
+                    displaySavedData();
                 } else {
                     throw new Error(data.error || 'データの削除に失敗しました。');
                 }
@@ -215,15 +230,13 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });       
     
-    // Close modal
-    closeModalButton.addEventListener('click', () => {
-        modal.style.display = 'none';
-    });
+    // **改善点: Close modal時も専用関数を使用**
+    closeModalButton.addEventListener('click', closeModal);
 
-    // Close modal when clicking outside of it
+    // **改善点: 外側クリック時も専用関数を使用**
     window.addEventListener('click', (event) => {
         if (event.target == modal) {
-            modal.style.display = 'none';
+            closeModal();
         }
     });
 
@@ -305,5 +318,5 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Initialize calendar
     generateCalendar(currentYear, currentMonth);
-    displaySavedData();  // Display data when the page loads
+    displaySavedData();
 });
