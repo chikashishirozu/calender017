@@ -108,6 +108,46 @@ if (!isset($_SESSION['user_id'])) {
 	    display: inline-block;
 	    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 	}	
+ /* 今日の日付のハイライト */
+ .day.today {
+     background-color: #ffeb3b;
+     font-weight: bold;
+     box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+ }
+
+ /* 選択された日付のスタイル改善 */
+ .day.selected {
+     background-color: #2196f3;
+     color: white;
+     font-weight: bold;
+ }
+
+ /* 日付セルのホバー効果 */
+ .day:not(.header):hover {
+     background-color: #e0e0e0;
+     cursor: pointer;
+     transform: scale(1.05);
+     transition: all 0.2s ease;
+ }
+
+ /* 空のセルには効果を適用しない */
+ .day:empty:hover {
+     background-color: #f0f0f0;
+     cursor: default;
+     transform: none;
+ }
+
+ /* モーダルの改善 */
+ .modal-content {
+     border-radius: 10px;
+     box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+ }
+
+ /* ボタンのホバー効果 */
+ button:hover {
+     opacity: 0.8;
+     cursor: pointer;
+ }	
     </style>
 </head>
 <body>

@@ -46,16 +46,33 @@ document.addEventListener("DOMContentLoaded", () => {
             calendarElement.appendChild(dayElement);
         });
 
+        // 月初の空白セルを追加
         for (let i = 0; i < firstDay; i++) {
             const emptyCell = document.createElement('div');
             emptyCell.classList.add('day');
             calendarElement.appendChild(emptyCell);
         }
 
+        // 日付セルを生成
         for (let day = 1; day <= daysInMonth; day++) {
             const dayElement = document.createElement('div');
             dayElement.classList.add('day');
             dayElement.textContent = day;
+            
+            // **改善点: 日付セルに曜日の色を適用**
+            const dayOfWeek = new Date(year, month, day).getDay();
+            if (dayOfWeek === 0) { // 日曜日
+                dayElement.classList.add('sunday');
+            } else if (dayOfWeek === 6) { // 土曜日
+                dayElement.classList.add('saturday');
+            }
+            
+            // **改善点: 今日の日付をハイライト**
+            const today = new Date();
+            if (year === today.getFullYear() && month === today.getMonth() && day === today.getDate()) {
+                dayElement.classList.add('today');
+            }
+            
             dayElement.addEventListener('click', () => selectDate(year, month, day, dayElement));
             calendarElement.appendChild(dayElement);
         }
