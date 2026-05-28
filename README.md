@@ -1,15 +1,15 @@
 # calender017
-
+```
 https://zusann123.blogspot.com/2024/12/blog-post_12.html
-
+```
 # Steps required to start and run the application
-
+```
 Install php8.3, mysql or mariadb, sqlite3
 
 Set up Mysql or Mariadb
 
 setting php.ini (timezone language extension)
-
+```
 # Windows11 setting
 
 I was able to safely develop in a local environment on Windows 11 by building a PHP8+Apache+MySQL+phpMyAdmin development environment without XAMPP, following the instructions at https://qiita.com/Limitex/items/098d2be431f1f031b1b9.
@@ -135,4 +135,34 @@ $ brew service restart httpd
 
 $ sqlite3 calendar.db "PRAGMA integrity_check;"
 ok
+```
+
+
+一括で修正するコマンド
+`
+bash# 所有者をhiroppy123:_wwwに変更
+```
+sudo chown -R hiroppy123:_www /usr/local/var/www/calender017
+```
+# ディレクトリのパーミッション修正
+```
+sudo find /usr/local/var/www/calender017 -type d -exec chmod 755 {} \;
+```
+# ファイルのパーミッション修正
+```
+sudo find /usr/local/var/www/calender017 -type f -exec chmod 644 {} \;
+```
+確認
+```
+bashls -al /usr/local/var/www/calender017
+```
+こうなればOK：
+```
+-rw-r--r--  1 hiroppy123  _www   index.php
+-rw-r--r--  1 hiroppy123  _www   api.php
+```
+
+.gitディレクトリも修正が必要な場合
+```
+bashsudo chown -R hiroppy123:admin /usr/local/var/www/calender017/.git
 ```
