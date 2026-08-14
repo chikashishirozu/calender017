@@ -15,9 +15,75 @@ if (!isset($_SESSION['user_id'])) {
     <link rel="shortcut icon" href="./favicon.png">
     <title>メモ付きカレンダー</title>
     <style>
+        /* ===== テーマ変数 =====
+           data-theme="light"（通常） / "soft"（中間・目に優しい） / "dark"（ダーク）
+           の3段階を body の data-theme 属性で切り替える */
+        :root {
+            --bg: #e6e6fa;
+            --text: #222;
+            --header-bg: #eef;
+            --header-text: #333;
+            --cell-bg: #f0f0f0;
+            --cell-border: #ddd;
+            --cell-hover: #e0e0e0;
+            --selected-bg: #2196f3;
+            --selected-text: #fff;
+            --today-bg: #ffeb3b;
+            --modal-overlay: rgba(0,0,0,0.4);
+            --modal-bg: #fefefe;
+            --modal-border: #888;
+            --button-bg: #b0c4de;
+            --button-text: #222;
+            --sunday: #e53935;
+            --saturday: #1e88e5;
+            --link: #333;
+        }
+        body[data-theme="soft"] {
+            /* 眩しすぎない、明暗の中間くらいのトーン */
+            --bg: #cfcfd6;
+            --text: #2b2b2f;
+            --header-bg: #b8b8c2;
+            --header-text: #2b2b2f;
+            --cell-bg: #bdbdc6;
+            --cell-border: #9a9aa4;
+            --cell-hover: #a9a9b3;
+            --selected-bg: #5c7ea3;
+            --selected-text: #f2f2f2;
+            --today-bg: #c9b458;
+            --modal-overlay: rgba(0,0,0,0.5);
+            --modal-bg: #d6d6dd;
+            --modal-border: #8c8c96;
+            --button-bg: #8fa6bd;
+            --button-text: #1e1e22;
+            --sunday: #c0625e;
+            --saturday: #5a7fa6;
+            --link: #2b2b2f;
+        }
+        body[data-theme="dark"] {
+            --bg: #1e1e24;
+            --text: #e6e6e6;
+            --header-bg: #2a2a33;
+            --header-text: #e6e6e6;
+            --cell-bg: #2c2c35;
+            --cell-border: #444;
+            --cell-hover: #3a3a45;
+            --selected-bg: #3f6ea5;
+            --selected-text: #fff;
+            --today-bg: #7a6a1e;
+            --modal-overlay: rgba(0,0,0,0.7);
+            --modal-bg: #26262e;
+            --modal-border: #555;
+            --button-bg: #45566b;
+            --button-text: #f0f0f0;
+            --sunday: #ef5350;
+            --saturday: #64b5f6;
+            --link: #e6e6e6;
+        }
         body {
             font-family: Arial, sans-serif;
-            background-color: #e6e6fa;
+            background-color: var(--bg);
+            color: var(--text);
+            transition: background-color 0.2s ease, color 0.2s ease;
         }
         h1 {
             font-weight: 400;
@@ -27,9 +93,17 @@ if (!isset($_SESSION['user_id'])) {
         }
         li a {
             text-decoration: none;
+            color: var(--link);
         }
         button {
             margin: 0 10px 10px 0;
+        }
+        #themeToggle {
+            background-color: var(--button-bg);
+            color: var(--button-text);
+            border: none;
+            border-radius: 3px;
+            padding: 5px 10px;
         }
         #currentMonthYear {
             margin: 0 10px 10px 0;
@@ -38,16 +112,17 @@ if (!isset($_SESSION['user_id'])) {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
             gap: 5px;
-            background-color: #e6e6fa;
+            background-color: var(--bg);
         }
         .day {
-            border: 1px solid #ddd;
+            border: 1px solid var(--cell-border);
             padding: 10px;
             text-align: center;
-            background-color: #f0f0f0;
+            background-color: var(--cell-bg);
+            color: var(--text);
         }
         .day.selected {
-            background-color: #f0f8ff;
+            background-color: var(--selected-bg);
         }
         .id, .memo, .reminder {
             margin-top: 20px;
@@ -68,15 +143,15 @@ if (!isset($_SESSION['user_id'])) {
             width: 100%;
             height: 100%;
             overflow: auto;
-            background-color: rgb(0,0,0);
-            background-color: rgba(0,0,0,0.4);
+            background-color: var(--modal-overlay);
             padding-top: 60px;
         }
         .modal-content {
-            background-color: #fefefe;
+            background-color: var(--modal-bg);
+            color: var(--text);
             margin: 5% auto;
             padding: 20px;
-            border: 1px solid #888;
+            border: 1px solid var(--modal-border);
             width: 80%;
         }
         .close {
@@ -91,18 +166,18 @@ if (!isset($_SESSION['user_id'])) {
             cursor: pointer;
         }
 	.sunday {
-	    color: red;
+	    color: var(--sunday);
 	}
 
 	.saturday {
-	    color: blue;
+	    color: var(--saturday);
 	}
 	#current-time {
 	    font-size: 20px;
 	    font-weight: 400;
 	    margin: 0 0 20px 0;
-	    color: #333;
-	    background-color: #eef;
+	    color: var(--header-text);
+	    background-color: var(--header-bg);
 	    padding: 5px 10px;
 	    border-radius: 5px;
 	    display: inline-block;
@@ -110,21 +185,21 @@ if (!isset($_SESSION['user_id'])) {
 	}	
  /* 今日の日付のハイライト */
  .day.today {
-     background-color: #ffeb3b;
+     background-color: var(--today-bg);
      font-weight: bold;
      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
  }
 
  /* 選択された日付のスタイル改善 */
  .day.selected {
-     background-color: #2196f3;
-     color: white;
+     background-color: var(--selected-bg);
+     color: var(--selected-text);
      font-weight: bold;
  }
 
  /* 日付セルのホバー効果 */
  .day:not(.header):hover {
-     background-color: #e0e0e0;
+     background-color: var(--cell-hover);
      cursor: pointer;
      transform: scale(1.05);
      transition: all 0.2s ease;
@@ -132,7 +207,7 @@ if (!isset($_SESSION['user_id'])) {
 
  /* 空のセルには効果を適用しない */
  .day:empty:hover {
-     background-color: #f0f0f0;
+     background-color: var(--cell-bg);
      cursor: default;
      transform: none;
  }
@@ -149,9 +224,19 @@ if (!isset($_SESSION['user_id'])) {
      cursor: pointer;
  }	
     </style>
+    <script>
+        // 表示直後にちらつかないよう、保存済みテーマを先に適用しておく
+        (function () {
+            var saved = localStorage.getItem('calendarTheme');
+            document.documentElement.dataset.themePreload = saved || 'light';
+        })();
+    </script>
 </head>
-<body>
+<body data-theme="light">
     <header>
+        <div>
+            <button id="themeToggle" type="button">🌓 テーマ切替（通常）</button>
+        </div>
         <nav>
             <ul>
                 <li><a href="index.php">トップページ</a></li>

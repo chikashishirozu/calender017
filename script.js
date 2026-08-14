@@ -1,4 +1,33 @@
 document.addEventListener("DOMContentLoaded", () => {
+    // ===== テーマ切り替え（通常 / ソフト(中間) / ダーク） =====
+    const THEMES = ['light', 'soft', 'dark'];
+    const THEME_LABELS = {
+        light: '🌓 テーマ切替（通常）',
+        soft: '🌗 テーマ切替（ソフト）',
+        dark: '🌑 テーマ切替（ダーク）'
+    };
+    const themeToggleButton = document.getElementById('themeToggle');
+
+    function applyTheme(theme) {
+        if (!THEMES.includes(theme)) theme = 'light';
+        document.body.setAttribute('data-theme', theme);
+        if (themeToggleButton) {
+            themeToggleButton.textContent = THEME_LABELS[theme];
+        }
+        localStorage.setItem('calendarTheme', theme);
+    }
+
+    // 保存されたテーマ（なければ通常モード）を適用
+    applyTheme(localStorage.getItem('calendarTheme') || 'light');
+
+    if (themeToggleButton) {
+        themeToggleButton.addEventListener('click', () => {
+            const current = document.body.getAttribute('data-theme') || 'light';
+            const nextIndex = (THEMES.indexOf(current) + 1) % THEMES.length;
+            applyTheme(THEMES[nextIndex]);
+        });
+    }
+
     const calendarElement = document.getElementById('calendar');
     const memoText = document.getElementById('memoText');
     const reminderText = document.getElementById('reminderText');
